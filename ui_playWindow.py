@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'playWindow.ui'
 #
-# Created: Mon Dec 08 12:49:22 2014
+# Created: Mon Dec 08 14:02:33 2014
 # by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,13 +17,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_PlayWindow(object):
     def setupUi(self, PlayWindow):
@@ -32,23 +30,23 @@ class Ui_PlayWindow(object):
         self.centralwidget = QtGui.QWidget(PlayWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.widget = QtGui.QWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(180, 31, 191, 321))
+        self.widget.setGeometry(QtCore.QRect(180, 31, 551, 491))
         self.widget.setObjectName(_fromUtf8("widget"))
         self.gridLayout = QtGui.QGridLayout(self.widget)
         self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-        self.scrambledLabel = QtGui.QLabel(self.widget)
-        self.scrambledLabel.setObjectName(_fromUtf8("scrambledLabel"))
-        self.gridLayout.addWidget(self.scrambledLabel, 0, 0, 1, 1)
-        self.resultLabel = QtGui.QLabel(self.widget)
-        self.resultLabel.setObjectName(_fromUtf8("resultLabel"))
-        self.gridLayout.addWidget(self.resultLabel, 2, 0, 1, 1)
         self.lineEdit = QtGui.QLineEdit(self.widget)
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.gridLayout.addWidget(self.lineEdit, 1, 0, 1, 2)
         self.checkButton = QtGui.QPushButton(self.widget)
         self.checkButton.setObjectName(_fromUtf8("checkButton"))
         self.gridLayout.addWidget(self.checkButton, 3, 1, 1, 1)
+        self.scrambledLabel = QtGui.QLabel(self.widget)
+        self.scrambledLabel.setObjectName(_fromUtf8("scrambledLabel"))
+        self.gridLayout.addWidget(self.scrambledLabel, 0, 0, 1, 1)
+        self.resultLabel = QtGui.QLabel(self.widget)
+        self.resultLabel.setObjectName(_fromUtf8("resultLabel"))
+        self.gridLayout.addWidget(self.resultLabel, 2, 0, 1, 1)
         PlayWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(PlayWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -63,14 +61,13 @@ class Ui_PlayWindow(object):
 
     def retranslateUi(self, PlayWindow):
         PlayWindow.setWindowTitle(_translate("PlayWindow", "MainWindow", None))
+        self.checkButton.setText(_translate("PlayWindow", "Check!", None))
         self.scrambledLabel.setText(_translate("PlayWindow", "TextLabel", None))
         self.resultLabel.setText(_translate("PlayWindow", "TextLabel", None))
-        self.checkButton.setText(_translate("PlayWindow", "Check!", None))
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtGui.QApplication(sys.argv)
     PlayWindow = QtGui.QMainWindow()
     ui = Ui_PlayWindow()
