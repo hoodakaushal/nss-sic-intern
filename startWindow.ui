@@ -50,20 +50,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="wordsetButton">
-        <property name="font">
-         <font>
-          <pointsize>36</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Select Wordset</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="difficultyButton">
         <property name="font">
          <font>
@@ -137,7 +123,6 @@
  </widget>
  <tabstops>
   <tabstop>profileButton</tabstop>
-  <tabstop>wordsetButton</tabstop>
   <tabstop>difficultyButton</tabstop>
   <tabstop>highscoresButton</tabstop>
   <tabstop>helpButton</tabstop>

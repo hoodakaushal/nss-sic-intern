@@ -17,13 +17,20 @@ class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
         # self.setupUi(self)
         # self.setCentralWidget(self.verticalLayout)
 
-        self.connect(self.newButton, SIGNAL('tabSignal()'), lambda t="New Game.": speakNewButton(t))
-        self.connect(self.profileButton, SIGNAL('tabSignal()'), lambda t="Change Profile.": speakNewButton(t))
-        self.connect(self.wordsetButton, SIGNAL('tabSignal()'), lambda t="Select Wordset.": speakNewButton(t))
-        self.connect(self.difficultyButton, SIGNAL('tabSignal()'), lambda t="Select Difficulty.": speakNewButton(t))
-        self.connect(self.highscoresButton, SIGNAL('tabSignal()'), lambda t="Highscores.": speakNewButton(t))
-        self.connect(self.helpButton, SIGNAL('tabSignal()'), lambda t="Help.": speakNewButton(t))
-        self.connect(self.exitButton, SIGNAL('tabSignal()'), lambda t="Exit.": speakNewButton(t))
+
+        qApp.focusChanged.connect(self.handleFocusChange)
+        # self.connect(self.newButton, SIGNAL('tabSignal()'), lambda t="New Game.": speakNewButton(t))
+        # self.connect(self.profileButton, SIGNAL('tabSignal()'), lambda t="Change Profile.": speakNewButton(t))
+        # self.connect(self.wordsetButton, SIGNAL('tabSignal()'), lambda t="Select Wordset.": speakNewButton(t))
+        # self.connect(self.difficultyButton, SIGNAL('tabSignal()'), lambda t="Select Difficulty.": speakNewButton(t))
+        # self.connect(self.highscoresButton, SIGNAL('tabSignal()'), lambda t="Highscores.": speakNewButton(t))
+        # self.connect(self.helpButton, SIGNAL('tabSignal()'), lambda t="Help.": speakNewButton(t))
+        # self.connect(self.exitButton, SIGNAL('tabSignal()'), lambda t="Exit.": speakNewButton(t))
+
+    def handleFocusChange(self, old, new):
+        if isinstance(new, QPushButton):
+            speech.say(new.text() + ' .')
+            # speech.say('1 2 3 4.')
 
 
 class FocusButton(QPushButton):
@@ -59,7 +66,7 @@ def main():
     startWindow = StartWindow()
     # playWindow.scrambledLabel.setText("itioncompet")
     # print('competition' in playWindow.words)
-    assert isinstance(startWindow.newButton, ui_startWindow.FocusButton)
+    # assert isinstance(startWindow.newButton, ui_startWindow.FocusButton)
     startWindow.show()
     app.exec_()
 
