@@ -31,7 +31,7 @@
          </font>
         </property>
         <property name="text">
-         <string>New Game</string>
+         <string>&amp;New Game</string>
         </property>
        </widget>
       </item>
@@ -45,7 +45,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Change Profile</string>
+         <string>Change &amp;Profile</string>
         </property>
        </widget>
       </item>
@@ -59,7 +59,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Select Difficulty</string>
+         <string>Select &amp;Difficulty</string>
         </property>
        </widget>
       </item>
@@ -73,7 +73,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Highscores</string>
+         <string>H&amp;ighscores</string>
         </property>
        </widget>
       </item>
@@ -87,7 +87,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Help</string>
+         <string>&amp;Help</string>
         </property>
        </widget>
       </item>
@@ -101,7 +101,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Exit</string>
+         <string>E&amp;xit</string>
         </property>
        </widget>
       </item>

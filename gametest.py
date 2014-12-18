@@ -14,7 +14,7 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         super(PlayWindow, self).__init__(parent)
         self.setupUi(self)
         self.resultLabel.clear()
-        self.makewords('words')
+        self.makewords('data\\words\\easy')
         self.resetWord()
 
         self.connect(self.lineEdit, SIGNAL('returnPressed()'), self.checker)

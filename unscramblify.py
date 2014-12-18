@@ -1,36 +1,375 @@
-__author__ = 'hooda'
+import random
 
 __author__ = 'hooda'
+
 import sys
+import os
+from collections import OrderedDict
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import speech
+import ui_difficultyDialog
+import ui_highscoresDialog
+import ui_playWindow
+import ui_profileDialog
+import ui_newProfileDialog
+import ui_selectProfileDialog
 import ui_startWindow
 
 
+
+
+
+# The first window that opens. Not much to it, just used to get to the various functions.
+# TODO : First-start help message.
+# TODO : Should help exist as its own window, or a context dependant popup.
 class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
     def __init__(self, parent=None):
+        """
+        Initialise the start window.
+        Read data from the data folder - profiles, highscores etc.
+        Setup the appropriate SIGNAL/SLOT connections.
+
+        :param parent:Parent of this window. Defaults to None since it is a main window.
+        """
         super(StartWindow, self).__init__(parent)
+        self.playWindow = None
         self.setupUi(self)
-        # self.setupUi(self)
-        # self.setCentralWidget(self.verticalLayout)
-
-
+        self.readData()
+        # Speak the name of the button which has focus. Not perfect - clicking a button, or alt-tabbing around also triggers.
         qApp.focusChanged.connect(self.handleFocusChange)
-        # self.connect(self.newButton, SIGNAL('tabSignal()'), lambda t="New Game.": speakNewButton(t))
-        # self.connect(self.profileButton, SIGNAL('tabSignal()'), lambda t="Change Profile.": speakNewButton(t))
-        # self.connect(self.wordsetButton, SIGNAL('tabSignal()'), lambda t="Select Wordset.": speakNewButton(t))
-        # self.connect(self.difficultyButton, SIGNAL('tabSignal()'), lambda t="Select Difficulty.": speakNewButton(t))
-        # self.connect(self.highscoresButton, SIGNAL('tabSignal()'), lambda t="Highscores.": speakNewButton(t))
-        # self.connect(self.helpButton, SIGNAL('tabSignal()'), lambda t="Help.": speakNewButton(t))
-        # self.connect(self.exitButton, SIGNAL('tabSignal()'), lambda t="Exit.": speakNewButton(t))
+
+        # Connections for the buttons. Self explanatory.
+        self.newButton.clicked.connect(self.createPlayWindow)
+        self.profileButton.clicked.connect(self.changeProfile)
+        self.difficultyButton.clicked.connect(self.changeDifficulty)
+        self.highscoresButton.clicked.connect(self.showHighscores)
+        self.helpButton.clicked.connect(self.showHelp)
+        self.exitButton.clicked.connect(self.saveAndExit)
+
+    def createPlayWindow(self):
+        self.playWindow = PlayWindow(self.profile, self)
+        self.hide()
+        self.playWindow.show()
+
+    def changeProfile(self):
+        # print self.profile.name
+        profileDialog = ProfileDialog(self)
+        if profileDialog.exec_():
+            if profileDialog.new:
+                newProfile = Profile(profileDialog.profile, 'easy', 0, 0, set())
+                f = open('data\\profiles\\' + str(profileDialog.profile), 'w')
+                f.write('easy' + '\n')
+                f.write('0' + '\n')
+                f.write('0' + '\n')
+                f.write('\n')
+                f.close()
+                self.profile = newProfile
+            else:
+                self.loadProfile(str(profileDialog.profile))
+
+    def changeDifficulty(self):
+        difficultyDialog = DifficultyDialog(self)
+        difficultyDialog.exec_()
+        if difficultyDialog.difficulty != '':
+            self.profile.difficulty = difficultyDialog.difficulty
+
+    def showHighscores(self):
+        highscoresDialog = HighscoresDialog(self)
+        highscoresDialog.exec_()
+
+    def showHelp(self):
+        pass
+
+    def readData(self):
+        f = open('data//lastprofile')
+        lastProfile = f.readline().rstrip()
+        self.loadProfile(lastProfile, 0)
+
+        f = open('data\\highscores.txt')
+        lines = f.readlines()
+        scores = OrderedDict()
+        # print(lines)
+        i = 0
+        while i < (len(lines)):
+            profile = lines[i].rstrip()
+            infiScore = int(lines[i + 1].rstrip())
+            timeScore = int(lines[i + 2].rstrip())
+            i = i + 4
+            scores[profile] = (infiScore, timeScore)
+        self.highscores = scores
+        f.close()
+
+
+    def loadProfile(self, profile, code=1):
+        if code == 1:
+            self.saveProfile()
+        name = profile
+        f = open('data\\profiles\\' + name)
+        difficulty = f.readline().rstrip()
+        infiScore = str(f.readline().rstrip())
+        timeScore = str(f.readline().rstrip())
+        f.readline()
+        blacklist = set()
+        for line in f.readlines():
+            blacklist.add(QString(line.rstrip()))
+        self.profile = Profile(name, difficulty, infiScore, timeScore, blacklist)
+
+    def saveProfile(self):
+        f = open('data\\profiles\\' + self.profile.name, 'w')
+        f.write(self.profile.difficulty + '\n')
+        f.write(str(self.profile.infiScore) + '\n')
+        f.write(str(self.profile.timeScore) + '\n')
+        f.write('\n')
+        for word in self.profile.blaclist:
+            f.write(str(word) + '\n')
+        f.close()
+
 
     def handleFocusChange(self, old, new):
         if isinstance(new, QPushButton):
-            speech.say(new.text() + ' .')
+            speech.say(new.text().replace("&", '') + ' .')
+            # print self.currentProfile
             # speech.say('1 2 3 4.')
+
+    def saveAndExit(self):
+        self.saveProfile()
+        self.writeHighscore()
+        f = open('data\\lastprofile', 'w')
+        f.write(self.profile.name)
+        f.close()
+        QCoreApplication.instance().exit()
+
+    def writeHighscore(self):
+        f = open('data\\highscores.txt')
+        lines = f.readlines()
+        scores = []
+        # print(lines)
+        i = 0
+        while i < (len(lines)):
+            profile = lines[i].rstrip()
+            infiScore = int(lines[i + 1].rstrip())
+            timeScore = int(lines[i + 2].rstrip())
+            i = i + 4
+            scores += [(profile, infiScore, timeScore)]
+        scores += [(self.profile.name, self.profile.infiScore, self.profile.timeScore)]
+
+        def getTimeHS(x):
+            return x[2]
+
+        scores = sorted(scores, key=getTimeHS)
+        scores = scores[0:10]
+        f = open('data\\highscores.txt', 'w')
+        for item in scores:
+            f.write('%s\n%i\n%i\n\n' % (item[0], int(item[1]), int(item[2])))
+        f.close()
+
+    def printf(self, x):
+        print x
+
+
+class ProfileDialog(QDialog, ui_profileDialog.Ui_DifficultyDialog):
+    def __init__(self, parent=None):
+        super(ProfileDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.profile = ''
+        self.new = False
+        self.selectExistingButton.clicked.connect(self.selectExisting)
+        self.createNewButton.clicked.connect(self.createNew)
+
+    def selectExisting(self):
+        selectProfileDialog = SelectProfileDialog(self)
+        if selectProfileDialog.exec_():
+            self.profile = selectProfileDialog.profileDropdown.currentText()
+            self.new = False
+            self.accept()
+
+    def createNew(self):
+        newProfileDialog = NewProfileDialog(self)
+        if newProfileDialog.exec_():
+            self.profile = newProfileDialog.lineEdit.text()
+            self.new = True
+            self.accept()
+
+
+class SelectProfileDialog(QDialog, ui_selectProfileDialog.Ui_SelectProfileDialog):
+    def __init__(self, parent=None):
+        super(SelectProfileDialog, self).__init__(parent)
+        self.setupUi(self)
+        profiles = os.listdir('data\\profiles')
+        profiles = list(map(QString, profiles))
+        self.profileDropdown.addItems(profiles)
+        self.profileDropdown.currentIndexChanged.connect(self.comboSpeaker)
+
+
+    def comboSpeaker(self, index):
+        speech.say(self.profileDropdown.itemText(index))
+
+
+class NewProfileDialog(QDialog, ui_newProfileDialog.Ui_NewProfileDialog):
+    def __init__(self, parent=None):
+        super(NewProfileDialog, self).__init__(parent)
+        self.setupUi(self)
+
+
+class DifficultyDialog(QDialog, ui_difficultyDialog.Ui_DifficultyDialog):
+    def __init__(self, parent=None):
+        super(DifficultyDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.difficulty = ''
+        self.easyButton.clicked.connect(self.setAndExit1)
+        self.mediumButton.clicked.connect(self.setAndExit2)
+        self.hardButton.clicked.connect(self.setAndExit3)
+
+    def setAndExit1(self):
+        difficulty = 'easy'
+        self.difficulty = difficulty
+        self.close()
+
+    def setAndExit2(self):
+        difficulty = 'medium'
+        self.difficulty = difficulty
+        self.close()
+
+    def setAndExit3(self):
+        difficulty = 'hard'
+        self.difficulty = difficulty
+        self.close()
+
+
+class HighscoresDialog(QDialog, ui_highscoresDialog.Ui_Highscores):
+    def __init__(self, parent=None):
+        super(HighscoresDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.readScores()
+        i = 1
+        for item in self.scores:
+            self.listWidget.addItem(QString('%i. %s. Score : %i' % (i, item, self.scores[item][1])))
+            i += 1
+        self.listWidget.setCurrentItem(self.listWidget.item(0))
+        speech.say(str(self.listWidget.currentItem().text()) + '.')
+        self.listWidget.currentRowChanged.connect(self.speakItem)
+
+    def speakItem(self):
+        speech.say(str(self.listWidget.currentItem().text()) + '.')
+
+
+    def readScores(self):
+        f = open('data\\highscores.txt')
+        lines = f.readlines()
+        scores = OrderedDict()
+        # print(lines)
+        i = 0
+        while i < (len(lines)):
+            profile = lines[i].rstrip()
+            infiScore = int(lines[i + 1].rstrip())
+            timeScore = int(lines[i + 2].rstrip())
+            i = i + 4
+            scores[profile] = (infiScore, timeScore)
+        self.scores = scores.copy()
+        f.close()
+
+
+class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
+    def __init__(self, profile, parent=None):
+        super(PlayWindow, self).__init__(parent)
+        # self.parent = parent
+        self.setupUi(self)
+        self.profile = profile
+        self.resultLabel.clear()
+        self.profileLabel.setText(QString(self.profile.name))
+        self.difficultyLabel.setText(QString(self.profile.difficulty))
+        self.timeLabel.setText(QString('----'))
+        self.scoreLabel.setText(QString('Score : 0'))
+        self.makewords('data\\words\\' + str(self.profile.difficulty))
+        self.resetWord()
+
+        self.connect(self.lineEdit, SIGNAL('returnPressed()'), self.checker)
+        self.connect(self.checkButton, SIGNAL('clicked()'), self.checker)
+        self.connect(self.repeatButton, SIGNAL('clicked()'), self.speakScrambledWord)
+        self.connect(self.nextButton, SIGNAL('clicked()'), self.skipWord)
+        self.connect(self.homeButton, SIGNAL('clicked()'), self.goBack)
+
+    def checker(self):
+        speech.say("Checking...")
+        scrambled = self.scrambledLabel.text()
+        cand = self.lineEdit.text()
+        validPerm = sorted(scrambled) == sorted(cand)
+        validWord = self.isWord(cand)
+        if validPerm and validWord:
+            self.resultLabel.setText("Correct!")
+            speech.say("Correct")
+            score = int(self.scoreLabel.text()[8:])
+            score = score + 1
+            self.profile.infiScore = str(max(int(self.profile.infiScore), score))
+            self.scoreLabel.setText('Score : ' + str(score))
+
+            self.profile.blaclist.add(QString(cand))
+            self.resetWord()
+            self.lineEdit.clear()
+        else:
+            # self.resultLabel.setText("Wrong! Right answer is " + self.answer)
+            # speech.say("Wrong! Right answer is " + self.answer)
+            self.resultLabel.setText('Wrong!')
+            speech.say('Wrong!')
+            self.scoreLabel.setText('Score : 0')
+
+    def resetWord(self):
+        newWord = random.choice(tuple(self.words))
+        self.answer = newWord
+        newWord = self.scrambleWord(newWord)
+        self.scrambledLabel.setText(newWord)
+        self.speakScrambledWord()
+
+
+    def speakScrambledWord(self):
+        s = str(self.scrambledLabel.text())
+        speech.say("Unscramble : ")
+        for char in s:
+            speech.say(char + '...')
+            # speech.say(phrase)
+
+    def skipWord(self):
+        self.scoreLabel.setText('Score : 0')
+        self.resetWord()
+
+    def scrambleWord(self, qstring):
+        s = str(qstring)
+        l = list(s)
+        random.shuffle(l)
+        s = ''.join(l)
+        q = QString(s)
+        if q == qstring:
+            return self.scrambleWord(qstring)
+        return QString(s)
+
+    def makewords(self, wordfile):
+        wordfile = open(wordfile)
+        wordset = set()
+        for line in wordfile:
+            cand = QString(line.rstrip())
+            if cand not in self.profile.blaclist:
+                wordset.add(cand)
+        self.words = wordset
+
+    def isWord(self, cand):
+        """
+
+        :rtype : bool
+        """
+        if cand in self.words:
+            # print('found', cand)
+            return True
+        else:
+            # print('not found', cand)
+            return False
+
+    def goBack(self):
+        self.hide()
+        self.parent().profile = self.profile
+        self.parent().show()
 
 
 class FocusButton(QPushButton):
@@ -43,22 +382,23 @@ class FocusButton(QPushButton):
         self.emit(SIGNAL('tabSignal()'))
 
 
-def speakTestButton(widget1, widget2):
-    speech.say("Fuck this shit!")
+class Profile:
+    def __init__(self, name, difficulty, infiScore, timeScore, blacklist):
+        assert isinstance(blacklist, set)
+        self.name = name
+        self.difficulty = difficulty
+        self.infiScore = infiScore
+        self.timeScore = timeScore
+        self.blaclist = blacklist.copy()
 
 
-def speakNewButton(t):
-    print("LOL")
-    speech.say(t)
-
-    # class FocusButton(QPushButton):
-    # def __init__(self, parent=None):
-    #         super(FocusButton, self).__init__(parent)
-    #
-    #     tabSignal = pyqtSignal()
-
-    def focusInEvent(self, QFocusEvent):
-        self.emit(SIGNAL('tabSignal()'))
+def makewords(wordfile):
+    wordfile = open(wordfile)
+    wordset = set()
+    for line in wordfile:
+        wordset.add(QString(line.rstrip()))
+    wordfile.close()
+    return wordset
 
 
 def main():

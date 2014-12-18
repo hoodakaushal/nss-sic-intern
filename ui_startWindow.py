@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'startWindow.ui'
 #
-# Created: Sat Dec 13 00:49:13 2014
+# Created: Thu Dec 18 02:23:26 2014
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -101,12 +101,12 @@ class Ui_startWindow(object):
 
     def retranslateUi(self, startWindow):
         startWindow.setWindowTitle(_translate("startWindow", "Unscramblify", None))
-        self.newButton.setText(_translate("startWindow", "New Game", None))
-        self.profileButton.setText(_translate("startWindow", "Change Profile", None))
-        self.difficultyButton.setText(_translate("startWindow", "Select Difficulty", None))
-        self.highscoresButton.setText(_translate("startWindow", "Highscores", None))
-        self.helpButton.setText(_translate("startWindow", "Help", None))
-        self.exitButton.setText(_translate("startWindow", "Exit", None))
+        self.newButton.setText(_translate("startWindow", "&New Game", None))
+        self.profileButton.setText(_translate("startWindow", "Change &Profile", None))
+        self.difficultyButton.setText(_translate("startWindow", "Select &Difficulty", None))
+        self.highscoresButton.setText(_translate("startWindow", "H&ighscores", None))
+        self.helpButton.setText(_translate("startWindow", "&Help", None))
+        self.exitButton.setText(_translate("startWindow", "E&xit", None))
 
 
 if __name__ == "__main__":
