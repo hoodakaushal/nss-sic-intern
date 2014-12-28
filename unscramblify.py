@@ -43,6 +43,7 @@ class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
 
         # Connections for the buttons. Self explanatory.
         self.newButton.clicked.connect(self.createPlayWindow)
+        self.newTimedButton.clicked.connect(self.createTimedPlayWindow)
         self.profileButton.clicked.connect(self.changeProfile)
         self.difficultyButton.clicked.connect(self.changeDifficulty)
         self.highscoresButton.clicked.connect(self.showHighscores)
@@ -50,7 +51,12 @@ class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
         self.exitButton.clicked.connect(self.saveAndExit)
 
     def createPlayWindow(self):
-        self.playWindow = PlayWindow(self.profile, self)
+        self.playWindow = PlayWindow(self.profile, False, self)
+        self.hide()
+        self.playWindow.show()
+
+    def createTimedPlayWindow(self):
+        self.playWindow = PlayWindow(self.profile, True, self)
         self.hide()
         self.playWindow.show()
 
@@ -273,7 +279,7 @@ class HighscoresDialog(QDialog, ui_highscoresDialog.Ui_Highscores):
 
 
 class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
-    def __init__(self, profile, parent=None):
+    def __init__(self, profile, timed, parent=None):
         super(PlayWindow, self).__init__(parent)
         # self.parent = parent
         self.setupUi(self)
@@ -281,7 +287,19 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         self.resultLabel.clear()
         self.profileLabel.setText(QString(self.profile.name))
         self.difficultyLabel.setText(QString(self.profile.difficulty))
-        self.timeLabel.setText(QString('----'))
+
+        if timed:
+            self.countdownTime = 30
+            self.timer = QTimer(self)
+            self.remainingTime = 30
+            self.connect(self.timer, SIGNAL('timeout()'), self.timeoutHandler)
+            self.secondTimer = QTimer(self)
+            self.elapsedSeconds = 0
+            self.connect(self.secondTimer, SIGNAL('timeout()'), self.updateTimeLabel)
+            self.timeLabel.setText(QString('0'))
+        else:
+            self.countdownTime = -1
+            self.timeLabel.setText(QString('----'))
         self.scoreLabel.setText(QString('Score : 0'))
         self.makewords('data\\words\\' + str(self.profile.difficulty))
         self.resetWord()
@@ -291,6 +309,15 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         self.connect(self.repeatButton, SIGNAL('clicked()'), self.speakScrambledWord)
         self.connect(self.nextButton, SIGNAL('clicked()'), self.skipWord)
         self.connect(self.homeButton, SIGNAL('clicked()'), self.goBack)
+
+    def updateTimeLabel(self):
+        self.elapsedSeconds += 1
+        self.timeLabel.setText(QString(str(self.elapsedSeconds)))
+        self.secondTimer.start(1000)
+
+    def timeoutHandler(self):
+        speech.say("Timeout")
+        self.resetWord()
 
     def checker(self):
         speech.say("Checking...")
@@ -303,7 +330,10 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
             speech.say("Correct")
             score = int(self.scoreLabel.text()[8:])
             score = score + 1
-            self.profile.infiScore = str(max(int(self.profile.infiScore), score))
+            if self.countdownTime > 0:
+                self.profile.timeScore = str(max(int(self.profile.timeScore), score))
+            else:
+                self.profile.infiScore = str(max(int(self.profile.infiScore), score))
             self.scoreLabel.setText('Score : ' + str(score))
 
             self.profile.blaclist.add(QString(cand))
@@ -322,6 +352,10 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         newWord = self.scrambleWord(newWord)
         self.scrambledLabel.setText(newWord)
         self.speakScrambledWord()
+        if self.countdownTime > 0:
+            self.elapsedSeconds = 0
+            self.timer.start(self.countdownTime * 1000)
+            self.secondTimer.start(1000)
 
 
     def speakScrambledWord(self):
@@ -370,6 +404,12 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         self.hide()
         self.parent().profile = self.profile
         self.parent().show()
+
+
+# class TimedPlayWindow(PlayWindow):
+# def __init__(self, profile, parent=None):
+#         super(TimedPlayWindow, self).__init__(profile, parent)
+#         self.countdownTime = 30
 
 
 class FocusButton(QPushButton):

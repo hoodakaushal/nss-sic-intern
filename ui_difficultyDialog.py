@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'difficultyDialog.ui'
 #
-# Created: Thu Dec 18 02:23:25 2014
+# Created: Sun Dec 28 15:35:57 2014
 # by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,13 +17,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_DifficultyDialog(object):
     def setupUi(self, DifficultyDialog):
@@ -71,7 +69,6 @@ class Ui_DifficultyDialog(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtGui.QApplication(sys.argv)
     DifficultyDialog = QtGui.QDialog()
     ui = Ui_DifficultyDialog()
