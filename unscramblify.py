@@ -11,6 +11,7 @@ from PyQt4.QtGui import *
 
 import speech
 import ui_difficultyDialog
+import ui_helpWindow
 import ui_highscoresDialog
 import ui_playWindow
 import ui_profileDialog
@@ -87,7 +88,9 @@ class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
         highscoresDialog.exec_()
 
     def showHelp(self):
-        pass
+        self.helpWindow = HelpWindow(self)
+        self.hide()
+        self.helpWindow.show()
 
     def readData(self):
         f = open('data//lastprofile')
@@ -136,7 +139,7 @@ class StartWindow(QMainWindow, ui_startWindow.Ui_startWindow):
 
     def handleFocusChange(self, old, new):
         if isinstance(new, QPushButton):
-            speech.say(new.text().replace("&", '') + ' .')
+            speech.say(new.text().replace("&", '') + '.')
             # print self.currentProfile
             # speech.say('1 2 3 4.')
 
@@ -277,6 +280,41 @@ class HighscoresDialog(QDialog, ui_highscoresDialog.Ui_Highscores):
         self.scores = scores.copy()
         f.close()
 
+
+class HelpWindow(QMainWindow, ui_helpWindow.Ui_HelpWindow):
+    def __init__(self, parent=None):
+        super(HelpWindow, self).__init__(parent)
+        self.setupUi(self)
+        self.connect(self.generalHelp, SIGNAL('clicked()'), self.speakGeneralHelp)
+        self.connect(self.backButton, SIGNAL('clicked()'), self.goBack)
+        self.connect(self.playingHelp, SIGNAL('clicked()'), self.speakPlayingHelp)
+        self.connect(self.scoringHelp, SIGNAL('clicked()'), self.speakScoringHelp)
+        self.connect(self.startWindowShortcuts, SIGNAL('clicked()'), self.speakStartWindowShortcuts)
+        self.connect(self.gameWindowShortcuts, SIGNAL('clicked()'), self.speakGameWindowShortcuts)
+
+    def goBack(self):
+        self.hide()
+        self.parent().show()
+
+    def speakGeneralHelp(self):
+        helpText = """Use tab to select the buttons, and Spacebar or Enter to select. Most buttons also have a shortcut."""
+        speech.say(helpText)
+
+    def speakPlayingHelp(self):
+        helpText = """The objective of the game is to unscramble a word. There are two modes - untimed, in which you have all the time you need to figure out the answer, and timed where you must answer in 30 seconds."""
+        speech.say(helpText)
+
+    def speakScoringHelp(self):
+        helpText = """Every time you solve a word, your score increases by one. Every time you try an incorrect answer, or run out of time, the score is set to zero again."""
+        speech.say(helpText)
+
+    def speakStartWindowShortcuts(self):
+        helpText = """New Game : Alt-N. New Timed Game : Alt-T. Change Profile : Alt-Pee. Select Difficulty : Alt-D. Highscores : Alt-I. Help : Alt-H. Exit : Alt-X."""
+        speech.say(helpText)
+
+    def speakGameWindowShortcuts(self):
+        helpText = """Home Screen : Alt-H. Repeat the scrambled word: Alt-R. Next word : Alt-N. Check Answer : Alt-C."""
+        speech.say(helpText)
 
 class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
     def __init__(self, profile, timed, parent=None):
