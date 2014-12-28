@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'highscoresDialog.ui'
 #
-# Created: Sun Dec 28 18:16:56 2014
+# Created: Sun Dec 28 18:40:43 2014
 # by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!

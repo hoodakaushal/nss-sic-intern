@@ -377,12 +377,15 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
             self.profile.blaclist.add(QString(cand))
             self.resetWord()
             self.lineEdit.clear()
+            self.lineEdit.setFocus()
         else:
             # self.resultLabel.setText("Wrong! Right answer is " + self.answer)
             # speech.say("Wrong! Right answer is " + self.answer)
             self.resultLabel.setText('Wrong!')
             speech.say('Wrong!')
             self.scoreLabel.setText('Score : 0')
+            self.lineEdit.clear()
+            self.lineEdit.setFocus()
 
     def resetWord(self):
         newWord = random.choice(tuple(self.words))
@@ -390,6 +393,7 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         newWord = self.scrambleWord(newWord)
         self.scrambledLabel.setText(newWord)
         self.speakScrambledWord()
+        self.lineEdit.setFocus()
         if self.countdownTime > 0:
             self.elapsedSeconds = 0
             self.timer.start(self.countdownTime * 1000)
@@ -402,6 +406,7 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         for char in s:
             speech.say(char + '...')
             # speech.say(phrase)
+        self.lineEdit.setFocus()
 
     def skipWord(self):
         self.scoreLabel.setText('Score : 0')

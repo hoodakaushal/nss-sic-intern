@@ -87,29 +87,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="pauseButton">
-          <property name="font">
-           <font>
-            <pointsize>16</pointsize>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string>&amp;Pause Game</string>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>play-pause.png</normaloff>play-pause.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>40</width>
-            <height>40</height>
-           </size>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -356,7 +333,7 @@
      <x>0</x>
      <y>0</y>
      <width>818</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
@@ -365,7 +342,6 @@
  <tabstops>
   <tabstop>lineEdit</tabstop>
   <tabstop>homeButton</tabstop>
-  <tabstop>pauseButton</tabstop>
   <tabstop>repeatButton</tabstop>
   <tabstop>nextButton</tabstop>
   <tabstop>checkButton</tabstop>
