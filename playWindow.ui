@@ -340,10 +340,10 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>lineEdit</tabstop>
   <tabstop>homeButton</tabstop>
   <tabstop>repeatButton</tabstop>
   <tabstop>nextButton</tabstop>
+  <tabstop>lineEdit</tabstop>
   <tabstop>checkButton</tabstop>
  </tabstops>
  <resources/>

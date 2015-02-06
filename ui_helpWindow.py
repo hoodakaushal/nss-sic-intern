@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'helpWindow.ui'
 #
-# Created: Sun Dec 28 18:40:42 2014
-# by: PyQt4 UI code generator 4.11.3
+# Created: Tue Dec 30 22:09:55 2014
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 

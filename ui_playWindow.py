@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'playWindow.ui'
 #
-# Created: Sun Dec 28 18:40:42 2014
-# by: PyQt4 UI code generator 4.11.3
+# Created: Tue Dec 30 22:09:55 2014
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -96,7 +96,7 @@ class Ui_PlayWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.scrambledLabel.setFont(font)
-        self.scrambledLabel.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
+        self.scrambledLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.scrambledLabel.setObjectName(_fromUtf8("scrambledLabel"))
         self.horizontalLayout_4.addWidget(self.scrambledLabel, QtCore.Qt.AlignHCenter)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -179,10 +179,10 @@ class Ui_PlayWindow(object):
 
         self.retranslateUi(PlayWindow)
         QtCore.QMetaObject.connectSlotsByName(PlayWindow)
-        PlayWindow.setTabOrder(self.lineEdit, self.homeButton)
         PlayWindow.setTabOrder(self.homeButton, self.repeatButton)
         PlayWindow.setTabOrder(self.repeatButton, self.nextButton)
-        PlayWindow.setTabOrder(self.nextButton, self.checkButton)
+        PlayWindow.setTabOrder(self.nextButton, self.lineEdit)
+        PlayWindow.setTabOrder(self.lineEdit, self.checkButton)
 
     def retranslateUi(self, PlayWindow):
         PlayWindow.setWindowTitle(_translate("PlayWindow", "Unscramblify", None))

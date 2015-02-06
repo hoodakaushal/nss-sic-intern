@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'selectProfileDialog.ui'
 #
-# Created: Sun Dec 28 18:40:42 2014
-# by: PyQt4 UI code generator 4.11.3
+# Created: Tue Dec 30 22:09:56 2014
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -47,7 +47,7 @@ class Ui_SelectProfileDialog(object):
         self.verticalLayout.addItem(spacerItem)
         self.buttonBox = QtGui.QDialogButtonBox(SelectProfileDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.verticalLayout.addWidget(self.buttonBox)
 
@@ -57,7 +57,7 @@ class Ui_SelectProfileDialog(object):
         QtCore.QMetaObject.connectSlotsByName(SelectProfileDialog)
 
     def retranslateUi(self, SelectProfileDialog):
-        SelectProfileDialog.setWindowTitle(_translate("SelectProfileDialog", "Dialog", None))
+        SelectProfileDialog.setWindowTitle(_translate("SelectProfileDialog", "Select Profile", None))
         self.selectProfileLabel.setText(_translate("SelectProfileDialog", "Select Profile", None))
 
 

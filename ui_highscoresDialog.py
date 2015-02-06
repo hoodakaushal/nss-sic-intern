@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'highscoresDialog.ui'
 #
-# Created: Sun Dec 28 18:40:43 2014
-# by: PyQt4 UI code generator 4.11.3
+# Created: Tue Dec 30 22:09:56 2014
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -37,7 +37,7 @@ class Ui_Highscores(object):
         QtCore.QMetaObject.connectSlotsByName(Highscores)
 
     def retranslateUi(self, Highscores):
-        Highscores.setWindowTitle(_translate("Highscores", "Dialog", None))
+        Highscores.setWindowTitle(_translate("Highscores", "Highscores", None))
 
 
 if __name__ == "__main__":

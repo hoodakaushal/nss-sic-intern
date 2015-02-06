@@ -317,10 +317,11 @@ class HelpWindow(QMainWindow, ui_helpWindow.Ui_HelpWindow):
         speech.say(helpText)
 
 class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
-    def __init__(self, profile, timed, parent=None):
+    def __init__(self, profile, timed, parentWin, parent=None):
         super(PlayWindow, self).__init__(parent)
         # self.parent = parent
         self.setupUi(self)
+        self.parentWin = parentWin
         self.profile = profile
         self.resultLabel.clear()
         self.profileLabel.setText(QString(self.profile.name))
@@ -329,7 +330,7 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         if timed:
             self.countdownTime = 30
             self.timer = QTimer(self)
-            self.remainingTime = 30
+            self.remainingTime = self.countdownTime
             self.connect(self.timer, SIGNAL('timeout()'), self.timeoutHandler)
             self.secondTimer = QTimer(self)
             self.elapsedSeconds = 0
@@ -354,6 +355,7 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
         self.secondTimer.start(1000)
 
     def timeoutHandler(self):
+        self.scoreLabel.setText('Score : 0')
         speech.say("Timeout")
         self.resetWord()
 
@@ -444,9 +446,17 @@ class PlayWindow(QMainWindow, ui_playWindow.Ui_PlayWindow):
             return False
 
     def goBack(self):
-        self.hide()
-        self.parent().profile = self.profile
-        self.parent().show()
+        # self.hide()
+        if not(self.countdownTime == -1):
+            self.timer.deleteLater()
+            self.secondTimer.deleteLater()
+        self.parentWin.profile = self.profile
+        self.parentWin.show()
+        # self.parent().profile = self.profile
+        # self.parent().show()
+        self.close()
+
+        # del(self)
 
 
 # class TimedPlayWindow(PlayWindow):
